@@ -1,0 +1,19 @@
+body { margin: 0; color: #202a35; background: #f5f7fb; font-family: system-ui, sans-serif; }
+main { max-width: 800px; margin: auto; padding: 1rem; }
+form, .number-pad { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0; }
+input { width: 4rem; padding: 0.4rem; }
+form button, .number-pad button, section > button { padding: 0.5rem 0.8rem; cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+[role="alert"] { color: #9c1717; }
+.grid { display: grid; grid-template-columns: repeat(var(--size), minmax(0, 1fr)); width: min(100%, 640px); border-right: 2px solid #27313f; border-bottom: 2px solid #27313f; }
+.grid-row { display: contents; }
+.grid button { aspect-ratio: 1; min-width: 0; padding: 0; border: 1px solid #aeb8c5; background: white; color: #1551a1; font-size: clamp(0.7rem, calc(10rem / var(--size)), 1.5rem); cursor: pointer; }
+.grid .box-top { border-top: 2px solid #27313f; }
+.grid .box-left { border-left: 2px solid #27313f; }
+.grid .related { background: #e7eff9; }
+.grid .clue { color: #222; font-weight: 700; }
+.grid .solver-filled { color: #167447; font-weight: 700; }
+.grid .selected { background: #a7c7f5; outline: 2px solid #1256a8; outline-offset: -3px; }
+.grid .conflict { background: #ffd2d2; color: #8e1414; }
+.grid .selected.conflict { outline-color: #9c1717; }
+.grid button:focus-visible { outline: 3px solid #104f9f; outline-offset: -3px; }

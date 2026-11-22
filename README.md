@@ -6,7 +6,12 @@ The Vue interface and REST API are packaged into one Spring Boot application.
 ## Requirements and build
 
 - JDK 25; set `JAVA_HOME` to the JDK.
-- Internet access on the first build for Maven, Node, npm, and dependencies.
+- Internet access on the first build for Maven dependencies.
+- For frontend tests, Google Chrome or Chromium and a compatible ChromeDriver.
+  Selenium Manager can download a driver on first use, which requires internet
+  access. Alternatively, pass the path to an installed driver with
+  `-Dwebdriver.chrome.driver=C:\path\to\chromedriver.exe`. Tests fail with an
+  explanation if the browser or driver is unavailable; `-DskipTests` skips them.
 
 On Windows, from the project root:
 
@@ -16,25 +21,29 @@ java -jar target\sudoku-solver.jar
 ```
 
 Open `http://localhost:8080`. Maven 3.6.3 or later can also be used with
-`mvn clean package`. The build installs its pinned Node and npm versions locally,
-runs backend and frontend tests, and builds the frontend. `-DskipTests` skips
-tests but still builds the frontend:
+`mvn clean package`. Maven packages the browser-ready frontend and the Vue
+WebJar, and runs backend and frontend tests. Node.js and npm are not required.
+Run just the tests with:
+
+```powershell
+.\mvnw.cmd test
+```
+
+`-DskipTests` skips the tests but still packages the frontend:
 
 ```powershell
 .\mvnw.cmd package -DskipTests
 ```
 
-Run directly from source with `.\mvnw.cmd spring-boot:run`; this also builds
-the frontend. For optional hot-reload development, install Node.js 24 and npm,
-start the backend, then run:
+Run directly from source with `.\mvnw.cmd spring-boot:run`. To serve edits to
+frontend resources directly during development, use:
 
 ```powershell
-cd src\main\frontend
-npm.cmd ci
-npm.cmd run dev
+.\mvnw.cmd spring-boot:run -Dspring-boot.run.addResources=true
 ```
 
-Vite serves `http://localhost:5173` and proxies `/api` to port 8080.
+Edit the files in `src\main\resources\static` and refresh the browser. Java
+changes require rebuilding and restarting the application.
 
 ## Limits
 

@@ -38,8 +38,18 @@
             <version>3.6.1</version>
         </dependency>
         <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>vue</artifactId>
+            <version>3.5.46</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -47,44 +57,6 @@
     <build>
         <finalName>sudoku-solver</finalName>
         <plugins>
-            <plugin>
-                <groupId>com.github.eirslett</groupId>
-                <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.15.1</version>
-                <configuration>
-                    <workingDirectory>src/main/frontend</workingDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-node-and-npm</id>
-                        <goals>
-                            <goal>install-node-and-npm</goal>
-                        </goals>
-                        <configuration>
-                            <nodeVersion>v24.15.0</nodeVersion>
-                            <npmVersion>11.6.2</npmVersion>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>npm-ci</id>
-                        <goals><goal>npm</goal></goals>
-                        <configuration><arguments>ci</arguments></configuration>
-                    </execution>
-                    <execution>
-                        <id>frontend-tests</id>
-                        <goals><goal>npm</goal></goals>
-                        <configuration>
-                            <arguments>run test</arguments>
-                            <skip>${skipTests}</skip>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>frontend-build</id>
-                        <goals><goal>npm</goal></goals>
-                        <configuration><arguments>run build</arguments></configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

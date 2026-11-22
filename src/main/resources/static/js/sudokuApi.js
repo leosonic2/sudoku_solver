@@ -1,20 +1,18 @@
-import type { PuzzleResponse, SolveResponse } from '../types/sudoku'
-
-function isRecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value) {
   return typeof value === 'object' && value !== null
 }
 
-function isBoard(value: unknown, size: number): value is number[][] {
+function isBoard(value, size) {
   return Array.isArray(value) && value.length === size && value.every(row =>
     Array.isArray(row) && row.length === size
       && row.every(cell => Number.isInteger(cell) && cell >= 0 && cell <= size),
   )
 }
 
-function validSolution(solution: number[][], game: PuzzleResponse, current: number[][]): boolean {
+function validSolution(solution, game, current) {
   const { size, boxRows, boxCols } = game
   for (let row = 0; row < size; row++) {
-    const values = new Set<number>()
+    const values = new Set()
     for (let column = 0; column < size; column++) {
       const value = solution[row][column]
       if (value === 0 || (current[row][column] !== 0 && current[row][column] !== value)) return false
@@ -27,7 +25,7 @@ function validSolution(solution: number[][], game: PuzzleResponse, current: numb
   }
   for (let row = 0; row < size; row += boxRows) {
     for (let column = 0; column < size; column += boxCols) {
-      const values = new Set<number>()
+      const values = new Set()
       for (let r = row; r < row + boxRows; r++) {
         for (let c = column; c < column + boxCols; c++) values.add(solution[r][c])
       }
@@ -37,13 +35,13 @@ function validSolution(solution: number[][], game: PuzzleResponse, current: numb
   return true
 }
 
-async function post(path: string, request: unknown): Promise<unknown> {
+async function post(path, request) {
   const response = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(request),
   })
-  const body: unknown = await response.json()
+  const body = await response.json()
   if (!response.ok) {
     const message = isRecord(body) && typeof body.message === 'string'
       ? body.message : `Request failed with HTTP ${response.status}.`
@@ -52,7 +50,7 @@ async function post(path: string, request: unknown): Promise<unknown> {
   return body
 }
 
-export async function generatePuzzle(size: number): Promise<PuzzleResponse> {
+export async function generatePuzzle(size) {
   const result = await post('/api/sudoku/generate', { size })
   let boxRows = Math.floor(Math.sqrt(size))
   while (size % boxRows !== 0) boxRows--
@@ -61,15 +59,10 @@ export async function generatePuzzle(size: number): Promise<PuzzleResponse> {
       || result.boxCols !== size / boxRows || !isBoard(result.puzzle, size)) {
     throw new Error('The server returned an invalid puzzle.')
   }
-  return {
-    size,
-    boxRows: result.boxRows,
-    boxCols: result.boxCols,
-    puzzle: result.puzzle,
-  }
+  return { size, boxRows: result.boxRows, boxCols: result.boxCols, puzzle: result.puzzle }
 }
 
-export async function solvePuzzle(game: PuzzleResponse, current: number[][]): Promise<SolveResponse> {
+export async function solvePuzzle(game, current) {
   const result = await post('/api/sudoku/solve', { ...game, current })
   if (!isRecord(result) || !isBoard(result.solution, game.size)
       || !validSolution(result.solution, game, current)
@@ -77,9 +70,5 @@ export async function solvePuzzle(game: PuzzleResponse, current: number[][]): Pr
       || typeof result.nodesExplored !== 'number' || result.nodesExplored < 0) {
     throw new Error('The server returned an invalid solution.')
   }
-  return {
-    solution: result.solution,
-    solveTimeMs: result.solveTimeMs,
-    nodesExplored: result.nodesExplored,
-  }
+  return { solution: result.solution, solveTimeMs: result.solveTimeMs, nodesExplored: result.nodesExplored }
 }

@@ -16,7 +16,6 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-# Generated frontend assets and dependencies
-src/main/resources/static/
+# Local dependencies from the previous frontend build
 src/main/frontend/node_modules/
 src/main/frontend/node/
